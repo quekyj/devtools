@@ -1,0 +1,17 @@
+name: app_that_uses_rohd
+description: A sample command-line application with basic argument parsing.
+publish_to: none
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.2.0-210.1.beta
+
+# Add regular dependencies here.
+dependencies:
+  args: ^2.4.2
+  rohd:
+    path: ../rohd/packages/rohd
+
+dev_dependencies:
+  lints: ^2.1.0
+  test: ^1.24.0

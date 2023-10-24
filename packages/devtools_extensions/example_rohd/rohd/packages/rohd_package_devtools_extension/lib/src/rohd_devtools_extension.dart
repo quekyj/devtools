@@ -2,31 +2,33 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// import 'package:devtools_app/devtools_app.dart';
 import 'package:devtools_extensions/api.dart';
 import 'package:devtools_extensions/devtools_extensions.dart';
+// import 'package:devtools_app/src/shared/diagnostics/inspector_service.dart';
+// import 'package:devtools_app/src/shared/diagnostics/diagnostics_node.dart';
 import 'package:flutter/material.dart';
+import 'package:rohd/rohd.dart' as rohd show InspectorService;
 
-class FooDevToolsExtension extends StatelessWidget {
-  const FooDevToolsExtension({super.key});
+class RohdDevToolsExtension extends StatelessWidget {
+  const RohdDevToolsExtension({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Quek: Here initialize the extensionManager and establishes a connection 
-    // with DevTools for this extension to interact over.
     return const DevToolsExtension(
-      child: FooExtensionHomePage(),
+      child: RohdExtensionHomePage(),
     );
   }
 }
 
-class FooExtensionHomePage extends StatefulWidget {
-  const FooExtensionHomePage({super.key});
+class RohdExtensionHomePage extends StatefulWidget {
+  const RohdExtensionHomePage({super.key});
 
   @override
-  State<FooExtensionHomePage> createState() => _FooExtensionHomePageState();
+  State<RohdExtensionHomePage> createState() => _RohdExtensionHomePageState();
 }
 
-class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
+class _RohdExtensionHomePageState extends State<RohdExtensionHomePage> {
   int counter = 0;
 
   String? message;
@@ -34,6 +36,10 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
   @override
   void initState() {
     super.initState();
+
+    // TODO(Quek): Init the inspector service
+    final invokeJson = rohd.InspectorService();
+
     // Example of the devtools extension registering a custom handler.
     extensionManager.registerEventHandler(
       DevToolsExtensionEventType.themeUpdate,
@@ -49,6 +55,7 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
 
   void _incrementCounter() {
     setState(() {
+      testCode();
       counter++;
     });
     extensionManager.postMessageToDevTools(
@@ -59,12 +66,25 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
     );
   }
 
+  Future<void> testCode() async {
+    // From Kenzii discord, https://github.com/flutter/devtools/blob/master/packages/devtools_app/lib/src/shared/diagnostics/inspector_service.dart#L1367-L1371
+    final checkServiceExtensionState = await serviceManager
+        .serviceExtensionManager
+        .isServiceExtensionAvailable('ext.module_tree');
+
+    final response =
+        await serviceManager.service!.callServiceExtension('ext.module_tree');
+    final json = response.json!;
+    print('is module tree ready? $checkServiceExtensionState');
+    print('extension module json = $json');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Foo DevTools Extension'),
+        title: const Text('ROHD DevTools Extension'),
       ),
       body: Center(
         child: Column(
@@ -78,6 +98,8 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
             ),
             const SizedBox(height: 48.0),
             Text('Received theme update from DevTools: $message'),
+            ElevatedButton(
+                onPressed: () => testCode(), child: const Text('Quek Btn')),
             const SizedBox(height: 48.0),
             ElevatedButton(
               onPressed: () => extensionManager
@@ -92,7 +114,7 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
                 message: 'Warning: with great power, comes great '
                     'responsibility. I\'m not going to tell you twice.\n'
                     '(This message can only be shown once)',
-                extensionName: 'foo',
+                extensionName: 'rohd',
               ),
               child: const Text(
                 'Show DevTools warning (ignore if already dismissed)',
@@ -106,7 +128,7 @@ class _FooExtensionHomePageState extends State<FooExtensionHomePage> {
                 message: 'Warning: with great power, comes great '
                     'responsibility. I\'ll keep reminding you if you '
                     'forget.\n(This message can be shown multiple times)',
-                extensionName: 'foo',
+                extensionName: 'rohd',
                 ignoreIfAlreadyDismissed: false,
               ),
               child: const Text(

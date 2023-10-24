@@ -761,6 +761,8 @@ class InspectorTree extends StatefulWidget {
   final LinkedHashMap<String, InspectableWidgetError>? widgetErrors;
   final String? screenId;
 
+  // Quek: I got a feeling, this is the place where the inspector tree get
+  // generated
   @override
   State<InspectorTree> createState() => _InspectorTreeState();
 }

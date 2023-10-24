@@ -1,0 +1,36 @@
+name: rohd_package_devtools_extension
+description: "A new Flutter project."
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0-210.1.beta <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  devtools_extensions:
+    path: ../../../../../devtools_extensions 
+  rohd:
+    path: ../rohd
+  devtools_app:
+    path: ../../../../../devtools_app
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+dependency_overrides:
+  devtools_app_shared:
+    path: ../../../../../devtools_app_shared
+  devtools_extensions:
+    path: ../../../../../devtools_extensions 
+  devtools_shared:
+    path: ../../../../../devtools_shared
